@@ -2,16 +2,17 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const admin = require('firebase-admin');
+const MongoClient = require('mongodb').MongoClient;
+require('dotenv').config()
 
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.wp8tr.mongodb.net/burjAlArab?retryWrites=true&w=majority`;
 const port = 5000;
 
-const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://arabian:ArabianHorse71@cluster0.wp8tr.mongodb.net/burjAlArab?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const app = express();
 
-var serviceAccount = require("./burj-al-arab-6d876-firebase-adminsdk-d9d3i-2cb72aa708.json");
+var serviceAccount = require("./configs/burj-al-arab-6d876-firebase-adminsdk-d9d3i-2cb72aa708.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -34,7 +35,6 @@ client.connect(err => {
       .then(result => {
         res.send(result.insertedCount > 0);
       })
-    console.log(newBooking);
   })
 
   app.get('/bookings', (req, res) => {
